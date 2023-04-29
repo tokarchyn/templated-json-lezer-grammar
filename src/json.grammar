@@ -1,6 +1,8 @@
+@precedence { objectTemplate @left, stringOrCB @left }
+
 @top JsonText { value }
 
-value { True | False | Null | Number | String | Object | Array }
+value { True | False | Null | Number | String | Object | Array | Template }
 
 String { string }
 Object { "{" list<Property>? "}" }
@@ -9,6 +11,9 @@ Array  { "[" list<value>? "]" }
 Property { PropertyName ":" value }
 PropertyName { string }
 
+Template { openTemplate !stringOrCB stringOrCB closeTemplate }
+stringOrCB { charNonCBs* !objectTemplate objectTemplate? charNonCBs* }
+objectTemplate { "{" !stringOrCB stringOrCB? "}" }
 
 @tokens {
   True  { "true" }
@@ -25,9 +30,13 @@ PropertyName { string }
   esc  { $["\\\/bfnrt] | "u" hex hex hex hex }
   hex  { $[0-9a-fA-F] }
 
+  openTemplate { "${" }
+  closeTemplate { "}" }
+  charNonCBs { $["\u{21}\u{23}-\u{5b}\u{5d}-\u{7a}\u{7c}\u{7e}-\u{10ffff}] | "\\" esc }
+
   whitespace { $[ \n\r\t] }
 
-  "{" "}" "[" "]"
+  "{" "}" "[" "]" 
 }
 
 @skip { whitespace }

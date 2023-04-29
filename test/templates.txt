@@ -1,0 +1,90 @@
+# Root template 1
+
+${a}
+
+==>
+
+JsonText(Template)
+
+# Empty
+
+${}
+
+==>
+
+JsonText(Template)
+
+# Root template with trail and head whitespaces
+
+    ${a}    
+
+==>
+
+JsonText(Template)
+
+# Root template with whitespaces inside
+
+    ${abar 1}    
+
+==>
+
+JsonText(Template)
+
+# Root template 2
+
+${"a"}
+
+==>
+
+JsonText(Template)
+
+# Template in object 1
+
+{ "a": ${"a"} }
+
+==>
+
+JsonText(Object(Property(PropertyName,Template)))
+
+# Template in object 2
+
+{ "a": ${a} }
+
+==>
+
+JsonText(Object(Property(PropertyName,Template)))
+
+# Template containing object in object
+
+{ "a": ${{b: 123}} }
+
+==>
+
+JsonText(Object(Property(PropertyName,Template)))
+
+# Template containing nested object in object
+
+{ "a": ${{b: [{ c: 123 }]}} }
+
+==>
+
+JsonText(Object(Property(PropertyName,Template)))
+
+# Template with templated literal
+
+{ "a": ${ `b ${123}` } }
+
+==>
+
+JsonText(Object(Property(PropertyName,Template)))
+
+# Multiple properties
+
+{ 
+    "a": ${ 134 },
+    "b": ${ 134 }
+}
+
+==>
+
+JsonText(Object(Property(PropertyName,Template), Property(PropertyName,Template)))
